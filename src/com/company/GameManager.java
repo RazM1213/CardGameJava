@@ -8,14 +8,17 @@ public class GameManager {
     public boolean gameOn = true;
 
     public void startGame() {
+        // Initiating the game:
         System.out.println("--- STARTING GAME ---");
         Deck gameDeck = new Deck();
         gameDeck.shuffle();
         Card userCard = gameDeck.dealCard();
 
+        // Getting user input:
         Scanner scanner = new Scanner(System.in);
         System.out.println("Your card: " + userCard);
 
+        // Main game loop:
         while (gameOn) {
             if (gameDeck.numCards <= 0) {
                 gameOn = false;
@@ -34,6 +37,8 @@ public class GameManager {
                 }
             }
         }
+
+        // Finishing the game:
         System.out.println("GAME OVER !");
         System.out.println("Number of correct guesses: " + guessCount);
         System.out.println("Thank you for playing !");
