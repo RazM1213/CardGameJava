@@ -12,6 +12,7 @@ public class GameManager {
         System.out.println("--- STARTING GAME ---");
         Deck gameDeck = new Deck();
         gameDeck.shuffle();
+        System.out.println(gameDeck.cards);
         Card userCard = gameDeck.dealCard();
 
         // Getting user input:
@@ -23,6 +24,7 @@ public class GameManager {
             if (gameDeck.numCards <= 0) {
                 gameOn = false;
             }
+            System.out.println("Cards Left: " + gameDeck.numCards);
             System.out.println("Take a guess: ");
 
             String userGuess = scanner.nextLine();
@@ -32,6 +34,8 @@ public class GameManager {
                 if ((userGuess.equals("greater") && userCard.isHigher(gameDeck.showCard())) || (userGuess.equals("lesser") && !userCard.isHigher(gameDeck.showCard()))) {
                     System.out.println("NICE GUESS !");
                     guessCount ++;
+                    userCard = gameDeck.dealCard();
+                    System.out.println("Your card: " + userCard);
                 } else {
                     gameOn = false;
                 }

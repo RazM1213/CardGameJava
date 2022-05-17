@@ -8,31 +8,32 @@ import java.util.Random;
 public class Deck {
 
     // Attributes:
-    public final ArrayList<Card> cards;
-    public final int numCards;
-    public File xmlFile = new File("C:\\Users\\razm1\\IdeaProjects\\CardGame\\src\\com\\company\\cardgame.xml");
+    public ArrayList<Card> cards;
+    public int numCards;
 
-    // Handling two scenarios:
+    // Constructor - manual deck building :
     public Deck () {
-        if (this.xmlFile.exists()) {
-            // Constructor - XML Parser :
-            DomParserV2 parserV2 = new DomParserV2();
-            this.cards = parserV2.parse();
-        } else {
-            // Constructor - manual deck building :
-            this.cards = new ArrayList<>();
-            for (Suit suit : Suit.values()) {
-                for (int value = 1 ; value <= 10 ; value ++) {
-                    cards.add(new Card(suit, value));
-                }
+        this.cards = new ArrayList<>();
+        for (Suit suit : Suit.values()) {
+            for (int value = 1 ; value <= 10 ; value ++) {
+                cards.add(new Card(suit, value));
             }
         }
+        this.numCards = this.cards.size();
+    }
+
+    // Constructor - XML Parser :
+    public Deck(String path){
+        File xmlFile = new File("C:\\Users\\razm1\\IdeaProjects\\CardGame\\src\\com\\company\\cardgame.xml");
+        DomParserV2 parserV2 = new DomParserV2();
+        this.cards = parserV2.parse();
         this.numCards = this.cards.size();
     }
 
 
     // Implementing dealCard() method:
     public Card dealCard() {
+        this.numCards --;
         return cards.remove(cards.size() - 1);
     }
 
