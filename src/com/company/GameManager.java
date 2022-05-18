@@ -1,91 +1,69 @@
 package com.company;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class GameManager {
 
-    public int guessCount = 0;
-    public boolean gameOn = true;
+    public int guessCount;
+    public boolean gameOn;
 
-    public void startGame() {
-        // Initiating the game:
-        System.out.println("--- STARTING GAME ---");
-        Deck gameDeck = new Deck();
-        gameDeck.shuffle();
-        System.out.println(gameDeck.cards);
-        Card userCard = gameDeck.dealCard();
+    public GameManager() {
+        this.guessCount = 0;
+        this.gameOn = true;
+    }
 
-        // Getting user input:
+    public void playGame() {
+        System.out.println("--- WELCOME ---");
+        System.out.println("Enter a path to XML file OR press enter to continue: ");
         Scanner scanner = new Scanner(System.in);
+        String userChoice = scanner.nextLine();
+        File xmlFile = new File(userChoice);
+        Deck gameDeck;
+        if (xmlFile.exists()) {
+            gameDeck = new Deck(userChoice);
+        } else {
+            gameDeck = new Deck();
+            gameDeck.shuffle();
+        }
+        System.out.println("--- STARTING GAME ---");
+        Card userCard = gameDeck.dealCard();
         System.out.println("Your card: " + userCard);
 
         // Main game loop:
-        while (gameOn) {
+        while (this.gameOn) {
             if (gameDeck.numCards <= 0) {
-                gameOn = false;
-            }
-            System.out.println("Cards Left: " + gameDeck.numCards);
-            System.out.println("Take a guess: ");
-
-            String userGuess = scanner.nextLine();
-            if (!userGuess.equals("greater") && !userGuess.equals("lesser")) {
-                System.out.println("Enter a valid guess !");
+                this.gameOn = false;
             } else {
-                if ((userGuess.equals("greater") && userCard.isHigher(gameDeck.showCard())) || (userGuess.equals("lesser") && !userCard.isHigher(gameDeck.showCard()))) {
-                    System.out.println("NICE GUESS !");
-                    guessCount ++;
-                    userCard = gameDeck.dealCard();
-                    System.out.println("Your card: " + userCard);
+                System.out.println("Cards Left: " + gameDeck.numCards);
+                System.out.println("Take a guess: ");
+
+                String userGuess = scanner.nextLine();
+                if (!userGuess.equals("greater") && !userGuess.equals("lesser")) {
+                    System.out.println("Enter a valid guess !");
                 } else {
-                    gameOn = false;
+                    if ((userGuess.equals("greater") && userCard.isHigher(gameDeck.showCard())) || (userGuess.equals("lesser") && !userCard.isHigher(gameDeck.showCard()))) {
+                        System.out.println("NICE GUESS !");
+                        System.out.println(gameDeck.cards);
+                        this.guessCount++;
+                        userCard = gameDeck.dealCard();
+                        System.out.println("Your card: " + userCard);
+                    } else {
+                        this.gameOn = false;
+                    }
                 }
             }
         }
 
-        // Finishing the game:
-        System.out.println("GAME OVER !");
-        System.out.println("Number of correct guesses: " + guessCount);
+        if (gameDeck.numCards == 0) {
+            System.out.println("YOU WIN !");
+        } else {
+            System.out.println("GAME OVER !");
+            System.out.println("Number of correct guesses: " + this.guessCount);
+        }
+
         System.out.println("Thank you for playing !");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //    public void startGame() {
-//        System.out.println("--- STARTING GAME... ---");
-//        Deck gameDeck = new Deck();
-//        gameDeck.shuffle();
-//        Card userCard = gameDeck.dealCard();
-//
-//        Scanner scanner = new Scanner(System.in);
-//
-//        while (gameOn && gameDeck.numCards > 0) {
-//            System.out.println("Your card: " + userCard);
-//            System.out.println("Take a guess: ");
-//
-//            String userGuess = scanner.nextLine();
-//
-//            if (!userGuess.equals("greater") && !userGuess.equals("lesser")) {
-//                System.out.println("Enter a valid guess!");
-//            } else {
-//                boolean userGuessBool = scanner.nextLine().equals("greater"); // "greater" or "lesser"
-//
-//                if (userCard.isHigher(gameDeck.showCard()) == userGuessBool) {
-//                    guessCount++;
-//                } else {
-//                    gameOn = false;
-//                }
-//            }
-//        }
-//        System.out.println("NUMBER OF CORRECT GUESSES: " + guessCount);
-//    }
 }
+
+

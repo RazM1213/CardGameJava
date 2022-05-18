@@ -11,17 +11,23 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
 
-public class DomParser {
+public class XMLParser {
 
-    private static final String fileName = "C:\\Users\\razm1\\IdeaProjects\\CardGame\\src\\com\\company\\cardgame.xml";
+    private final String path;
 
-    public static void main(String[] args) {
+    public XMLParser(String path) {
+        this.path = path;
+    }
+    public ArrayList<Card> parse() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new File(fileName));
+            Document doc = builder.parse(new File(this.path));
+            ArrayList<Card> cards = new ArrayList<>();
 
             NodeList nodeList = doc.getElementsByTagName("Card");
             for (int temp = 0; temp < nodeList.getLength(); temp++) {
@@ -36,14 +42,17 @@ public class DomParser {
                     String cardValue = element.getElementsByTagName("CardValue").item(0).getTextContent();
                     String suit = element.getElementsByTagName("Suit").item(0).getTextContent();
 
-                    System.out.println(cardValue);
-                    System.out.println(suit);
-                    System.out.println("===============");
+                    Suit suitConverted = Suit.valueOf(suit.toUpperCase(Locale.ROOT));
+                    int cardValueConverted = Integer.parseInt(cardValue);
+
+                    cards.add(new Card(suitConverted, cardValueConverted));
                 }
             }
+            return cards;
         }
         catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
